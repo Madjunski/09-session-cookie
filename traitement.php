@@ -3,24 +3,37 @@
     session_start();
     require_once('bdd.php');
 
-    if(isset($_GET['register'])){
-        $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-        $dateInscription = date('Y-m-d H:i:s');
-        $req = $bdd->prepare('INSERT INTO user (pseudo, email, password, address, zip, city, date_inscription) VALUES (:pseudo, :email, :password, :address, :zip, :city, :date_inscription)');
-        $req->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
-        $req->bindValue(':email', $_POST['email'], PDO::PARAM_STR);
-        $req->bindValue(':password', $password);
-        $req->bindValue(':address', $_POST['address'], PDO::PARAM_STR);
-        $req->bindValue(':zip', $_POST['zip'], PDO::PARAM_STR);
-        $req->bindValue(':city', $_POST['city'], PDO::PARAM_STR);
-        $req->bindValue(':date_inscription', $dateInscription);
-        $req->execute();
-        $_SESSION['notification'] = '<p style="color: green";> Bonjour ' . $_POST['pseudo'] . ', bienvenue sur notre site!</p>';
-        header('Location: index.php');
+    if(isset($_GET['register'])){ //création compte
+        if($_POST['pseudo'] != NULL && $_POST['email'] != NULL && $_POST['password'] != NULL && $_POST['address'] != NULL && $_POST['zip'] != NULL && $_POST['city'] != NULL){
+            if(strlen($_POST['zip']) >= 4 && strlen($_POST['zip'])<=5){
+                $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
+                $dateInscription = date('Y-m-d H:i:s');
+                $req = $bdd->prepare('INSERT INTO user (pseudo, email, password, address, zip, city, date_inscription) VALUES (:pseudo, :email, :password, :address, :zip, :city, :date_inscription)');
+                $req->bindValue(':pseudo', $_POST['pseudo'], PDO::PARAM_STR);
+                $req->bindValue(':email', $_POST['email'], PDO::PARAM_STR);
+                $req->bindValue(':password', $password);
+                $req->bindValue(':address', $_POST['address'], PDO::PARAM_STR);
+                $req->bindValue(':zip', $_POST['zip'], PDO::PARAM_STR);
+                $req->bindValue(':city', $_POST['city'], PDO::PARAM_STR);
+                $req->bindValue(':date_inscription', $dateInscription);
+                $req->execute();
+                $_SESSION['notification'] = '<p style="color: green";> Bonjour ' . $_POST['pseudo'] . ', bienvenue sur notre site!</p>';
+                $_SESSION['connected'] = TRUE;
+                header('Location: profile.php');
+            }
+            else{
+                $_SESSION['notification'] = '<p style="color: green";> Le CP ne comporte pas assez ou trop de caractères</p>';
+            }            
+        }
+        else{
+            $_SESSION['notification'] = '<p style="color: red";> Données sont manquantes dans le formulaire</p>';
+        }
+        
     }
+    
     elseif (isset($_GET['connect'])) {
         // $email = $_POST['email'];
-        $req = $bdd->prepare('SELECT password, pseudo FROM user WHERE email=:email');
+        $req = $bdd->prepare('SELECT id, password, pseudo FROM user WHERE email=:email');
         $req->bindValue(':email', $_POST['email']);
         $req->execute();
         $data = $req->fetch();
@@ -28,7 +41,7 @@
         if(isset($data['password'])){
             if (password_verify($_POST['password'], $data['password'])) {
                 $_SESSION['notification'] = '<p style="color: green;">Bonjour ' . $data['pseudo'] . '</p>';
-                $_SESSION['connecter'] = TRUE;
+                $_SESSION['connected'] = $data['id'];
                 header('Location: profile.php');
             } 
             else {
