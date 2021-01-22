@@ -1,3 +1,7 @@
+<?php
+    include_once('session.php');
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -33,6 +37,9 @@
 
         <input type="submit" value="inscription">
     </form>
+
+    <p><a href="index.php">Retourner à l'accueil</a></p>
+
 
 </body>
 

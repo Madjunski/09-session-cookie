@@ -1,3 +1,9 @@
+<?php
+    include_once('session.php');
+    /**récupérer l'adresse IP */
+    // $ip = $_SERVER['REMOTE_ADDR'];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -18,9 +24,11 @@
         <label for="password">Mot de passe</label><br>
         <input type="password" name="password"><br>
 
-        <input type="submut" value="connexion">
+        <input type="submit" value="connexion">
 
     </form>
+
+    <p>Pas encore inscrit? <a href="register.php">Créer un compte</p>
 
 </body>
 
