@@ -1,10 +1,21 @@
 <?php
     include_once('session.php');
     require_once("bdd.php");
-    if(isset($_SESSION['connected']) && $_SESSION['connected'] != NULL){    
-        $id = (INT)$_SESSION['connected'];
-        $req = $bdd->query('SELECT * FROM user WHERE id=' . $id);
-        $user = $req->fetch();
+    // if(isset($_SESSION['connected']) && $_SESSION['connected'] != NULL){
+    
+/*    if(isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != NULL){  //idem session, mais avec COOKIE
+        // $id = (INT)$_SESSION['connected']; 
+        $id = (int)$_COOKIE['user_id'];//session ou cookie
+        */
+    if(isset($_SESSION['connected']) || isset($_COOKIE['user_id'])){
+        if(isset($_SESSION['connected']) && $_SERVER['connected'] != NULL){
+            $id = (INT)$_SESSION['connected'];
+        }
+        elseif(isset($_COOKIE['user_id']) && $_COOKIE['user_id'] != NULL){
+            $id = (int)$_COOKIE['user_id'];
+        }
+            $req = $bdd->query('SELECT * FROM user WHERE id=' . $id);
+            $user = $req->fetch();
 ?>
 
     <!DOCTYPE html>

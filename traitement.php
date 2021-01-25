@@ -1,6 +1,10 @@
 <?php
 
     session_start();
+    // setcookie('user_id', 'test', NULL, time()+3600);
+    // echo($_COOKIE['user_id']);
+    // die();
+    // setcookie('user_id', 11, time()+3600); //heure actuelle + durée .......... *24*3 
     require_once('bdd.php');
 
     if(isset($_GET['register'])){ //création compte
@@ -62,6 +66,14 @@
             if (password_verify($_POST['password'], $data['password'])) {
                 $_SESSION['notification'] = '<p style="color: green;">Bonjour ' . $data['pseudo'] . '</p>';
                 $_SESSION['connected'] = $data['id'];
+                if(isset($_POST['remember']) && $_POST['remember'] != NULL){
+                    setcookie('user_id', $data['id'], time()+3600); //déposer un cookie
+                }
+
+                // $_COOKIE['user_id'] = $data['id'];
+                // echo ($_COOKIE['user_id']);
+                // die();
+                // $_COOKIE['user_id'] = $data['id'];
                 header('Location: profile.php');
             } 
             else {

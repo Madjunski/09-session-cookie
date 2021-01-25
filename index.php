@@ -24,6 +24,9 @@
         <label for="password">Mot de passe</label><br>
         <input type="password" name="password"><br>
 
+        <label for="remember">rester connecté</label>
+        <input type="checkbox" name="remember">
+
         <input type="submit" value="connexion">
 
     </form>
